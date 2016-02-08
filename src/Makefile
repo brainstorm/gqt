@@ -1,6 +1,6 @@
 BIN=../bin
 OBJ=../obj
-HTS_PREFIX=$(shell pkg-config --variable=prefix htslib)
+HTS_INCLUDES=$(shell pkg-config --variable=includedir htslib)
 SQLITE_INCLUDES=$(shell pkg-config --variable=includedir sqlite3)
 #CFLAGS=-g -D_FILE_OFFSET_BITS=64
 CFLAGS=-O2 -D_FILE_OFFSET_BITS=64 -Werror -Wuninitialized
@@ -68,6 +68,6 @@ $(OBJ)/%.o: %.c
 $(BIN)/%: %.c $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ \
 		-DSAMTOOLS=1 \
-		-I$(HTS_PREFIX) \
+		-I$(HTS_INCLUDES) \
 		-I$(SQLITE_INCLUDES) \
 		-ldl -lz -lm -pthread -lsqlite3 -lhts
