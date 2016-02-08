@@ -62,8 +62,7 @@ parse_q:
 
 
 $(OBJ)/%.o: %.c 
-	$(CC) -c $(CFLAGS) -o $@ $< \
-		-I$(HTS_PREFIX)
+	$(CC) -c $(CFLAGS) -o $@ $<
 
 
 $(BIN)/%: %.c $(OBJS)
