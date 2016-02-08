@@ -1,6 +1,7 @@
 BIN=../bin
 OBJ=../obj
-HTS_ROOT=../../htslib
+HTS_PREFIX=$(shell pkg-config --variable=prefix htslib)
+SQLITE_INCLUDES=$(shell pkg-config --variable=includedir sqlite3)
 #CFLAGS=-g -D_FILE_OFFSET_BITS=64
 CFLAGS=-O2 -D_FILE_OFFSET_BITS=64 -Werror -Wuninitialized
 #CFLAGS=-Wall -O0 -g -fno-inline -fkeep-inline-functions -D_FILE_OFFSET_BITS=64 -fPIC -DDEBUG -D_DEBUG
@@ -11,37 +12,36 @@ CFLAGS=-O2 -D_FILE_OFFSET_BITS=64 -Werror -Wuninitialized
 #CFLAGS+=-Dtime_sum_range_records_in_place_wahbm
 #CFLAGS+=-Dtime_convert_file_by_name_bcf_to_wahbm_bim
 #CFLAGS+=-Dtime_sort_rotate_gt_md
-SQLITE_ROOT=../../sqlite-amalgamation-3080701
 CC=gcc
 LEX=flex
 
 LIB= timer.o \
-     misc.o \
-     query.o \
-     pop.o \
-     bim.o \
-     vid.o \
-     off.o \
-     parse_q.yy.o \
-     parse_q.o \
-     ped.o \
-     pq.o \
-     bcf.o \
-     quick_file.o \
-     output_buffer.o \
-     pthread_pool.o \
-     genotq.o \
-     convert.o \
-     plt.o \
-     wah.o \
-     wahbm.o \
-     wahbm_in_place.o \
-     wahbm_compressed_in_place.o \
-     ubin.o \
-     view.o \
-     sort.o \
-     count.o \
-     sandbox.o
+		 misc.o \
+		 query.o \
+		 pop.o \
+		 bim.o \
+		 vid.o \
+		 off.o \
+		 parse_q.yy.o \
+		 parse_q.o \
+		 ped.o \
+		 pq.o \
+		 bcf.o \
+		 quick_file.o \
+		 output_buffer.o \
+		 pthread_pool.o \
+		 genotq.o \
+		 convert.o \
+		 plt.o \
+		 wah.o \
+		 wahbm.o \
+		 wahbm_in_place.o \
+		 wahbm_compressed_in_place.o \
+		 ubin.o \
+		 view.o \
+		 sort.o \
+		 count.o \
+		 sandbox.o
 
 .SUFFIXES:
 
@@ -53,27 +53,22 @@ OBJS=$(addprefix $(OBJ)/, $(LIB))
 PROG=read_binary_uints \
 	gqt 
 
-
-LIST=$(SQLITE_ROOT)/sqlite3.o parse_q $(addprefix $(BIN)/, $(PROG))
+LIST=parse_q $(addprefix $(BIN)/, $(PROG))
 
 all: $(LIST)
 
 parse_q: 
 	$(LEX) -oparse_q.yy.c parse_q.l
 
-$(SQLITE_ROOT)/sqlite3.o: $(SQLITE_ROOT)/sqlite3.c
-	$(CC) -c $(SQLITE_ROOT)/sqlite3.c -o $(SQLITE_ROOT)/sqlite3.o
 
 $(OBJ)/%.o: %.c 
 	$(CC) -c $(CFLAGS) -o $@ $< \
-		-I$(HTS_ROOT) -I$(SQLITE_ROOT)
+		-I$(HTS_PREFIX)
 
 
 $(BIN)/%: %.c $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ \
-		-I$(HTS_ROOT) \
-		-I$(SQLITE_ROOT) \
 		-DSAMTOOLS=1 \
-		$(HTS_ROOT)/libhts.a \
-		$(SQLITE_ROOT)/sqlite3.o \
-		-ldl -lz -lm  -pthread
+		-I$(HTS_PREFIX) \
+		-I$(SQLITE_INCLUDES) \
+		-ldl -lz -lm -pthread -lsqlite3 -lhts

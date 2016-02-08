@@ -27,79 +27,25 @@ with millions of individuals.
 2. [Extra detail] (#extra-detail)
 
 ## Installation
-GQT depends on htslib, sqlite3, and lex (flex).
 
-*Step 1*. Install htslib.
-```
-git clone https://github.com/samtools/htslib.git
-cd htslib
-make
-cd ..
-```
-
-*Step 2*. Download sqlite amalgamation source.
-```
-wget http://www.sqlite.org/2014/sqlite-amalgamation-3080701.zip
-unzip sqlite-amalgamation-3080701.zip
-```
-
-*Step 3*. Check to see if your system has lex/flex installed.  If not, install.
-```
-lex -V
-flex -V
-```
-
-If both fail then install from source, otherwise skip to step 4 
-```
-wget http://downloads.sourceforge.net/project/flex/flex-2.5.39.tar.bz2
-bunzip2 flex-2.5.39.tar.bz2
-tar xvf flex-2.5.39.tar
-cd flex-2.5.39
-./configure
-make
-make install
-cd ..
-```
-
-*Step 4*. Get GQT source then modify the GQT Makefile by setting the
-`HTS_ROOT` and `SQLITE_ROOT` variable in `src/Makfile` to reflect their
-locations based on the directories in which they were placed during steps 1 and 2.  Compile.
-
-```
-git clone https://github.com/ryanlayer/gqt.git
-cd gqt/
-make
-```
+GQT depends on htslib, sqlite3, and lex (flex). Make sure they are installed (via brew, conda, apt or your package manager of choice).
 
 At this point, it is recommended that you copy the gqt binary to a directory that is on your PATH.
 
+## Testing
 
+These are optional instructions should you want to run the GQT functional tests.
 
-*Step 5 (Optional)* Run the GQT functional tests.
+Make sure you have bcftools and plink2 installed. Then:
 
-5a. Install bcftools (not necessary for GQT to function, but useful for the functional tests below).
-```
-cd ..
-git clone https://github.com/samtools/bcftools
-cd bcftools
-make
-```
-
-5b. Install plink (v1.9) (not necessary for GQT to function, but useful for the functional tests below)..
-```
-# Download the appropriate binary from:
-https://www.cog-genomics.org/plink2
-# Now copy the plink binary to a directory on your PATH
-```
-
-5c. In addition, after you install [bcftools](https://github.com/samtools/bcftools),
+After you install of [bcftools](https://github.com/samtools/bcftools),
 you need to also update the directory assigned to [BCFTOOLS_PLUGIN](https://github.com/ryanlayer/gqt/blob/master/test/func/functional_tests.sh#L510) in your `gqt/test/func/functional_tests.sh`
 file to be the plugins directory in the bcftools source tree. For example, if you compiled bcftool
 in `~/src`, the correct path for BCFTOOLS_PLUGIN would be `~/src/bcftools/plugins`. That is:
 
     export BCFTOOLS_PLUGINS="$HOME/src/bcftools/plugins"
 
-5d. Lastly, you may need to also upate the directories assigned to either [LD_LIBRARY_PATH](https://github.com/ryanlayer/gqt/blob/master/test/func/functional_tests.sh#L511) (linux)
+Lastly, you may need to also upate the directories assigned to either [LD_LIBRARY_PATH](https://github.com/ryanlayer/gqt/blob/master/test/func/functional_tests.sh#L511) (linux)
 or [DYLD_LIBRARY_PATH](https://github.com/ryanlayer/gqt/blob/master/test/func/functional_tests.sh#L512) (Mac OS X) in your `gqt/test/func/functional_tests.sh` file to include the directory where `libhts.so.1` is located. For example, if you compiled htslib in `~/src`, the correct settings would be:
     
     export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/src/htslib"
