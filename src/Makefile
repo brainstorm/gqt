@@ -62,7 +62,7 @@ parse_q:
 
 
 $(OBJ)/%.o: %.c 
-	$(CC) -c $(CFLAGS) -o $@ $<
+	$(CC) -c $(CFLAGS) -I$(HTS_INCLUDES) -I$(SQLITE_INCLUDES) -o $@ $<
 
 
 $(BIN)/%: %.c $(OBJS)
