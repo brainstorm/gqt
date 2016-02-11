@@ -1,7 +1,7 @@
 BIN=../bin
 OBJ=../obj
-HTS_INCLUDES=$(shell pkg-config --variable=includedir htslib)
-SQLITE_INCLUDES=$(shell pkg-config --variable=includedir sqlite3)
+HTS_INCLUDES=$(pkg-config --variable=includedir htslib)
+SQLITE_INCLUDES=$(pkg-config --variable=includedir sqlite3)
 #CFLAGS=-g -D_FILE_OFFSET_BITS=64
 CFLAGS=-O2 -D_FILE_OFFSET_BITS=64 -Werror -Wuninitialized
 #CFLAGS=-Wall -O0 -g -fno-inline -fkeep-inline-functions -D_FILE_OFFSET_BITS=64 -fPIC -DDEBUG -D_DEBUG
@@ -56,6 +56,8 @@ PROG=read_binary_uints \
 LIST=parse_q $(addprefix $(BIN)/, $(PROG))
 
 all: $(LIST)
+	@echo $(value HTS_INCLUDES)
+	@echo $(value SQLITE_INCLUDES)
 
 parse_q: 
 	$(LEX) -oparse_q.yy.c parse_q.l
